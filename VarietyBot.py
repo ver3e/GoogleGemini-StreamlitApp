@@ -145,7 +145,7 @@ def main():
 
     user_question = st.chat_input("Ask VarietyBot...")
 
-    if user_question:
+    if user_question is not None and user_question!=" ":
         try:
             with st.chat_message("user"):
                 st.write(user_question)
