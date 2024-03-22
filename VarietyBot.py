@@ -157,6 +157,10 @@ def main():
                     st.session_state.msg_history.append({"role": "assistant", "response": pdf_response})
         except Exception as e:
             st.error(f"Error handling User Question: {e}")
+    else:
+        with st.chat_message("assistant"):
+                    st.write("Hello, how may I assist you today?")
+                    st.session_state.msg_history.append({"role": "assistant", "response":"Hello, how may I assist you today?" })
     
     st.sidebar.header(" ")
     st.sidebar.button("Click to Clear Chat History", on_click=clear_chat_convo)
