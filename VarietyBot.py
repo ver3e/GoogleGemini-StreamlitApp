@@ -12,7 +12,8 @@ from langchain.prompts import PromptTemplate
 
 gemini_config = {'temperature': 0.8, 'top_p': 1, 'top_k': 1, 'max_output_tokens': 2048}
 page_config = {st.title('🤖🌐 VarietyBot'),
-st.caption("Please ensure clarity in your questions for a smooth conversation. If you've uploaded a PDF, just mention 'my pdf' in your questions. Otherwise, ask usual questions for AI-Generated answers ☺")}
+st.caption("Please ensure clarity in your questions for a smooth conversation. If you've uploaded a PDF, just mention 'my pdf' in your questions. Otherwise, ask usual questions for AI-Generated answers ☺")
+}
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -157,6 +158,8 @@ def main():
                     st.session_state.msg_history.append({"role": "assistant", "response": pdf_response})
         except Exception as e:
             st.error(f"Error handling User Question: {e}")
+
+    
     
     st.sidebar.header(" ")
     st.sidebar.button("Click to Clear Chat History", on_click=clear_chat_convo)
