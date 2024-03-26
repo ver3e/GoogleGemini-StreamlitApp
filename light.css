@@ -1,13 +1,11 @@
 [data-testid="stAppViewContainer"] {
-    background-color: #d0d0d0; /* Light grey background */
-    color: #333; /* Dark text color for readability */
+    background-color: #c3c3c3; /* Light grey background */
 }
 
 [data-testid="stChatMessage"] {
-    background-color: #c0c0c0; /* Lighter grey message background */
-    border: 1px solid #ccc; /* Light border */
+    background-color: #bebebeac; /* Lighter grey message background */
     padding: 1%;
-    color: #333; /* Dark text color for readability */
+    border: 1px solid #000000;
 }
 
 [data-testid="stSidebar"] {
@@ -16,8 +14,7 @@
 }
 
 [data-testid="stHeader"] {
-    background-color: #d0d0d0; /* Light grey header background */
-    color: #333; /* Dark text color for readability */
+    background-color: #c3c3c3; /* Light grey header background */
 }
 
 [data-testid="stSidebarNavLink"] {
@@ -35,7 +32,7 @@
 }
 
 [data-testid="baseButton-secondary"] {
-    background-color: #c0c0c0; /* Light grey secondary button background */
+    background-color: #88888885; /* Light grey secondary button background */
     border: 1px solid #ccc; /* Light border */
     color: #333; /* Dark text color for readability */
 }
