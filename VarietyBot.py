@@ -12,7 +12,7 @@ from langchain.prompts import PromptTemplate
 
 gemini_config = {'temperature': 0.8, 'top_p': 1, 'top_k': 1, 'max_output_tokens': 2048}
 page_config = {st.title('🤖🌐 VarietyBot'),
-st.caption("Please ensure clarity in your questions for a smooth conversation. If you've uploaded a PDF, just mention 'give summary of my pdf' when you have uploaded and ask usual questions for AI-Generated answers ☺")
+st.caption("Please ensure clarity in your questions for a smooth conversation. If you've uploaded a PDF, just mention the phrase 'my pdf' in your questions and then ask usual questions for AI-Generated answers ☺")
 }
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
