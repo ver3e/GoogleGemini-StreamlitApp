@@ -6,6 +6,7 @@
 [data-testid="stChatMessage"] {
     background-color: #c0c0c0; /* Lighter grey message background */
     border: 1px solid #ccc; /* Light border */
+    padding: 1%;
     color: #333; /* Dark text color for readability */
 }
 
