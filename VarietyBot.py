@@ -187,7 +187,6 @@ def main():
             st.error(f"Error handling User Question: {e}")
     
     st.sidebar.header(" ")
-    
     st.sidebar.button("Click to Clear Chat History", on_click=clear_chat_convo)
 if __name__ == "__main__":
     main()
