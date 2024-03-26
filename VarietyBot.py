@@ -114,10 +114,6 @@ def change_theme_option(theme):
         st.session_state.theme = 'Dark'
 
 def main():
-    if "theme" not in st.session_state:
-        st.session_state.theme = 'Dark'
-    else:
-        apply_custom_css(st.session_state.theme)
     
     start_conversation = model.start_chat(history=[])
 
@@ -162,6 +158,20 @@ def main():
 
     user_question = st.chat_input("Ask VarietyBot...")
 
+    selected_theme = st.sidebar.radio("Choose Theme", ['Light', 'Dark'], index=0 if st.session_state.get('theme') == 'Light' else 1, key="theme_selector")
+
+    try:
+        if selected_theme.lower() == 'light':
+            with open('light.css') as f:
+                st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+            st.session_state.theme = 'Light'  # Set the theme in session state
+        elif selected_theme.lower() == 'dark':
+            with open('dark.css') as f:
+                st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
+            st.session_state.theme = 'Dark'  # Set the theme in session state
+    except FileNotFoundError:
+        st.warning('CSS file not found')
+
     if user_question is not None and user_question.strip() != "":
         try: 
             with st.chat_message("user"):
@@ -177,9 +187,7 @@ def main():
             st.error(f"Error handling User Question: {e}")
     
     st.sidebar.header(" ")
-    selected_theme = st.sidebar.radio("Choose Theme", ['Light', 'Dark'], index=0 if st.session_state.theme == 'Light' else 1, key="theme_selector")
-    change_theme_option(selected_theme)
+    
     st.sidebar.button("Click to Clear Chat History", on_click=clear_chat_convo)
-
 if __name__ == "__main__":
     main()
