@@ -94,25 +94,6 @@ def user_response(user_question):
 def clear_chat_convo():
     st.session_state.chat_history.history=[]
 
-def apply_custom_css(theme):
-    try:
-        if theme == 'light':
-          with open('light.css') as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-        elif theme == 'dark':
-          with open('dark.css') as f:
-            st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True)
-    except FileNotFoundError:
-        st.warning('CSS file not found')
-
-def change_theme_option(theme):
-    if theme == 'Light':
-        apply_custom_css(theme='light')
-        st.session_state.theme = 'Light'
-    elif theme == 'Dark':
-        apply_custom_css(theme='dark')
-        st.session_state.theme = 'Dark'
-
 def main():
     
     start_conversation = model.start_chat(history=[])
