@@ -2,14 +2,14 @@
     background-color: #0E1116;
 }
 [data-testid="stChatMessage"] {
-    background-color: #0D1321;
+    background-color: #0a0d1280;
     background-size: 20px 10px;
     padding: 1%;
     background-position: 0 20px 10px 0px;
     border: 1px solid #7E8AA2;
 }
 [data-testid="stSidebar"] {
-    background-color: #2B2D42;
+    background-color: #292f4598;
 }
 [data-testid="stHeader"] {
     background-color: #0E1116;
@@ -29,7 +29,7 @@
     background-color: #2E4057;
 }
 [data-testid="baseButton-secondary"] {
-    background-color: #243252;
+    background-color: #0E1116;
     border: 1px solid #7E8AA2; 
 }
 [data-testid="baseButton-secondary"]:hover {
