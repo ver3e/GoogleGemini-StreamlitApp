@@ -105,11 +105,11 @@ def main():
     if "chat_history" not in st.session_state:
         st.session_state.chat_history = start_conversation
     
-    for message in st.session_state.chat_history.history:
+    for message in st.session_state.chat_history.history: #This is the how it implements the role names and their display
         avatar = role_name(message.role)
         if avatar:
             with st.chat_message(message.role, avatar=avatar):
-                if "content" in message.parts[0].text: 
+                if "content" in message.parts[0].text:  #Extracts the user question from pdf prompt in get_generated_user_input() 
                     user_question = extract_user_question(message.parts)
                     if user_question:
                         st.markdown(user_question)
