@@ -38,6 +38,7 @@ def extract_text(list_of_uploaded_files):
         for page in read_pdf.pages:
             pdf_text+=page.extract_text()
     
+    
     return pdf_text
     
 
@@ -45,6 +46,7 @@ def get_chunks(text):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=10000, chunk_overlap=4000)
     chunks = text_splitter.split_text(text)
     return chunks
+
 
 #Embedding and storing the pdf Local
 def get_embeddings_and_store_pdf(chunk_text):
@@ -59,14 +61,21 @@ def get_embeddings_and_store_pdf(chunk_text):
 
 #Generating user response for the pdf
 def get_generated_user_input(user_question):
+    # Initialize Google Generative AI Embeddings with the specified model
     text_embedding = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    
+    # Load stored embeddings using FAISS, allowing dangerous deserialization
     stored_embeddings = FAISS.load_local("embeddings_index", text_embedding, allow_dangerous_deserialization=True)
+    
+    # Search for similarity between user question and stored embeddings
     check_pdf_similarity = stored_embeddings.similarity_search(user_question)
 
+    # Generate a prompt for answering the query based on the context and user question
     prompt = f"Answer this query based on the Context: \n{check_pdf_similarity}?\nQuestion: \n{user_question}"
 
+    # Send the prompt as a message in the chat history and retrieve the response
     pdf_response = st.session_state.chat_history.send_message(prompt)
-    
+    # Return the response
     return pdf_response
 
 #Clearing Chat 
@@ -90,58 +99,76 @@ def stream(response):
 
 #Extracts the user question from pdf prompt in get_generated_user_input() 
 def extract_user_question(prompt_response):
+    # Iterate through the parts of the prompt response in reverse order
     for part in reversed(prompt_response):
+        # Check if the part contains the keyword "Question:"
         if "Question:" in part.text:
+            # Split the text after "Question:" and return the extracted user question
             return part.text.split("Question:")[1].strip()
 
 def main():
-    #CSS File opening
+    # Opening CSS File
+    # Read the contents of 'dark.css' file and embed it in the HTML style tag
     with open('dark.css') as f:
+        # Apply the CSS style to the page
         st.markdown(f'<style>{f.read()}</style>', unsafe_allow_html=True) 
 
-
+    # Start a conversation using the model, initially with an empty history
     start_conversation = model.start_chat(history=[])
 
+    # Check if 'chat_history' is not already in the session state
     if "chat_history" not in st.session_state:
+        # If not, initialize 'chat_history' with the start of the conversation
         st.session_state.chat_history = start_conversation
     
-    for message in st.session_state.chat_history.history: #This is the how it implements the role names and their display
+    # Iterate over each message in the chat history
+    for message in st.session_state.chat_history.history:
+        # Get the role name of the message and fetch corresponding avatar if available
         avatar = role_name(message.role)
+        # Check if avatar exists
         if avatar:
+            # Display the message with the role's avatar
             with st.chat_message(message.role, avatar=avatar):
-                if "content" in message.parts[0].text:  #Extracts the user question from pdf prompt in get_generated_user_input() 
+                # Check if the message has 'content' in its parts
+                if "content" in message.parts[0].text: 
+                    # Extract the user's question from the message parts (if available)
                     user_question = extract_user_question(message.parts)
+                    # Check if a user question is extracted
                     if user_question:
+                        # Display the user question using Markdown
                         st.markdown(user_question)
                 else:  
+                    # If 'content' is not found in the parts, display the message text using Markdown
                     st.markdown(message.parts[0].text)
-    
-    with st.sidebar:
-        option=st.selectbox("",("ChatCUD","ChatPDF"),index=None,placeholder="Choose Your Assistant...")
-        if option=='ChatCUD':
-            pre_loaded_pdfs=['student_hand_book.pdf','catalogue.pdf']
-            texts = extract_text(pre_loaded_pdfs) 
-            chunk=get_chunks(texts)
-            get_embeddings_and_store_pdf(chunk)
-
             
+    # Get user input from the chat interface
     user_question = st.chat_input("Ask ChatCUD...")
 
+    # Processing user input
     if user_question is not None and user_question.strip() != "":
-
+        # Display the user input message with user avatar
         with st.chat_message("user", avatar="user.png"):
             st.write(user_question)
 
-        if option=="ChatCUD":
-            responses = get_generated_user_input(user_question)
+            # Pre-load PDFs and extract text from them
+            pre_loaded_pdfs=['catalogue.pdf']
+            texts = extract_text(pre_loaded_pdfs) 
+            chunk=get_chunks(texts)
+            get_embeddings_and_store_pdf(chunk)
+        
+        # Get generated responses for the user input
+        responses = get_generated_user_input(user_question)
+        
+        # If responses are generated
+        if responses:
+            # Display the responses with assistant's avatar
             with st.chat_message("assistant", avatar="bot.png"):
+                # Write the responses to the chat
                 st.write_stream(stream(responses))
-        else:
-            response_text = st.session_state.chat_history.send_message(user_question)
-            with st.chat_message("assistant", avatar="bot.png"):
-                st.write_stream(stream(response_text))
 
+    # Add a button in the sidebar to clear the chat history
     st.sidebar.button("Click to Clear Chat History", on_click=clear_chat_convo)
+
 
 if __name__ == "__main__":
     main()
